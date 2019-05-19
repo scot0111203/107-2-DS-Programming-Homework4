@@ -47,12 +47,15 @@ https://github.com/r-hub/cranlogs/commits/master
 ```{r data1}
 library(httr) 
 commitHistory <- content(GET("https://api.github.com/repos/r-hub/cranlogs/commits"))
+commitHistory
 ```
 
 ### 1.1 取出單一commit資料
 請由commitHistory取出第10個元素，並存在答案物件oneCommitRecord。
 ```{r ans101}
 # oneCommitRecord
+oneCommitRecord <- commitHistory[[10]]
+oneCommitRecord
 ```
 
 
