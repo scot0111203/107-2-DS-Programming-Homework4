@@ -47,7 +47,6 @@ https://github.com/r-hub/cranlogs/commits/master
 ```{r data1}
 library(httr) 
 commitHistory <- content(GET("https://api.github.com/repos/r-hub/cranlogs/commits"))
-commitHistory
 ```
 
 ### 1.1 取出單一commit資料
@@ -78,6 +77,7 @@ df_commit <- data.frame(
         author = oneCommitRecord[["commit"]][["author"]][["name"]],
         commiter = oneCommitRecord[["commit"]][["committer"]][["name"]],
         commitDate = oneCommitRecord[["commit"]][["committer"]][["date"]],
+        sha = oneCommitRecord[["sha"]],
         stringsAsFactors=F
 )
 df_commit
@@ -92,6 +92,7 @@ commit_df_fun <- function(oneCommitRecord){
         author = oneCommitRecord[["commit"]][["author"]][["name"]],
         commiter = oneCommitRecord[["commit"]][["committer"]][["name"]],
         commitDate = oneCommitRecord[["commit"]][["committer"]][["date"]],
+        sha = oneCommitRecord[["sha"]],
         stringsAsFactors=F
 )
 return(df_commit)
