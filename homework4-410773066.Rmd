@@ -177,7 +177,7 @@ df_validCommits$validCommit
 ```{r ans112}
 # df_validCommitsSubsample
 df_validCommitsSubsample <- data.frame(
-       commitDate =df_validCommits$commitDate[df_validCommits$validCommit] 
+       commitDate =df_validCommits$date[df_validCommits$validCommit] 
         )
 df_validCommitsSubsample
 ```
@@ -188,8 +188,8 @@ df_validCommitsSubsample
 
 ```{r ans113}
 # validCounts
-length(df_validCommitsSubsample$commitDate)
-還沒寫完
+length(levels(as.factor(df_validCommitsSubsample$commitDate))) -> validCounts
+validCounts
 ```
 
 ### 1.14 不重覆有效commit次數查詢函數
