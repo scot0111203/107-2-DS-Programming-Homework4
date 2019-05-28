@@ -234,6 +234,57 @@ valid_commit_count <- function(username,reponame,wday,startHour,endHour){
 最後一行請打valid_commit_count。
 ```{r ans114}
 # valid_commit_count
+valid_commit_count <- function(username,reponame,wday,startHour,endHour){
+
+   str_replace_all(
+  "https://api.github.com/repos/r-hub/cranlogs/commits",
+  c(
+    "r-hub"=username,
+    "cranlogs"=reponame
+    )
+  ) -> commitCheckStatement
+  commitHistory <- content(GET(commitCheckStatement)) # 想辦法由username,reponame input產生合理的...
+  
+  # 接著依順序貼下先前完成的以下步驟，便可得到validCounts成為output
+  # 1.4
+  map_dfr(commitHistory,commit_df_fun) -> df_allCommits
+  df_allCommits
+  # 1.5
+  df_allCommits$samePerson <- df_allCommits[["author"]] == df_allCommits[["commiter"]]
+  df_allCommits$samePerson
+  # 1.6
+  df_allCommits[df_allCommits$samePerson == T ,] -> df_validCommits
+  df_validCommits
+  # 1.7
+  library(lubridate)
+commitDate<- ymd_hms(df_validCommits[["commitDate"]])
+df_validCommits$commitDate <- with_tz(commitDate, tzone = "Asia/Taipei")
+df_validCommits$commitDate
+  # 1.8 
+df_validCommits$hh<- hour(df_validCommits$commitDate)
+df_validCommits$hh
+  # 1.9 
+date(df_validCommits$commitDate) -> df_validCommits$date
+df_validCommits$date
+  # 1.10 
+wday(df_validCommits$commitDate,week_start= getOption("lubridate.week.start", 1)) -> df_validCommits$weekday
+df_validCommits$weekday 
+  # 1.11 : 這邊要改一下，以對應input的wday, startHour, endHour
+df_validCommits$weekday>= wday & df_validCommits$weekday <= wday -> c
+df_validCommits$hh >= startHour & df_validCommits$hh <= endHour -> d
+df_validCommits$validCommit <- c & d
+df_validCommits$validCommit
+  # 1.12 
+df_validCommitsSubsample <- data.frame(
+       commitDate =df_validCommits$date[df_validCommits$validCommit] 
+        )
+df_validCommitsSubsample
+  # 1.13
+length(levels(as.factor(df_validCommitsSubsample$commitDate))) -> validCounts
+validCounts
+  return(validCounts)
+}
+valid_commit_count
 ```
 
 
